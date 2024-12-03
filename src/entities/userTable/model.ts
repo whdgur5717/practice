@@ -1,10 +1,20 @@
-type FieldType = "text" | "textarea" | "date" | "select" | "checkbox";
+/* -----------------------------------------------------------------------------
+ * 필수 필드 타입 정의
+ * -------------------------------------------------------------------------- */
 
-type MinimumField = {
-  type: FieldType;
+type FieldInputType = "text" | "textarea" | "date" | "select" | "checkbox";
+
+type RequiredField = {
+  type: FieldInputType;
   label: string;
   required: boolean;
 }; // 필수 필드
+
+/* -----------------------------------------------------------------------------
+ * 필드 구성
+ * type=select일 경우 options에 대한 타입 정의 필요
+ * defaultValue 타입을 통해 입력값의 타입을 정의
+ * -------------------------------------------------------------------------- */
 
 const nameField = {
   type: "text" as const,
@@ -58,10 +68,10 @@ type FieldData =
   | typeof dateField
   | typeof jobField
   | typeof emailField;
+//각 필드가 RequiredField를 만족하는지 검사 - 만족하지 않으면 never 타입 반환
+type Validation = FieldData extends RequiredField ? FieldData : never;
 
-type Validation = FieldData extends MinimumField ? FieldData : never;
-
-const fields = [
+export const fields = [
   nameField,
   addressField,
   memoField,
