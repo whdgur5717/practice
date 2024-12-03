@@ -80,7 +80,7 @@ export const fields = [
   emailField,
 ] as const satisfies Validation[];
 
-type UserRecord = {
+export type UserRecord = {
   [K in (typeof fields)[number]["label"]]: Extract<
     (typeof fields)[number],
     { label: K }
