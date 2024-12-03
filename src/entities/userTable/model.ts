@@ -4,7 +4,7 @@ type MinimumField = {
   type: FieldType;
   label: string;
   required: boolean;
-};
+}; // 필수 필드
 
 const nameField = {
   type: "text" as const,
@@ -51,10 +51,21 @@ const emailField = {
   defaultValue: false,
 };
 
-type Form =
+type FieldData =
   | typeof nameField
   | typeof addressField
   | typeof memoField
   | typeof dateField
   | typeof jobField
   | typeof emailField;
+
+type Validation = FieldData extends MinimumField ? FieldData : never;
+
+const fields = [
+  nameField,
+  addressField,
+  memoField,
+  dateField,
+  jobField,
+  emailField,
+] as const satisfies Validation[];
