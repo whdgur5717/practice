@@ -41,4 +41,4 @@ export const Fields = [
     label: "이메일 수신 동의",
     required: false,
   },
-] satisfies Field[];
+] as const satisfies Field[];
