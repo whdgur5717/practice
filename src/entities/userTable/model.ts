@@ -69,3 +69,10 @@ const fields = [
   jobField,
   emailField,
 ] as const satisfies Validation[];
+
+type UserRecord = {
+  [K in (typeof fields)[number]["label"]]: Extract<
+    (typeof fields)[number],
+    { label: K }
+  >["defaultValue"];
+};
