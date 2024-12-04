@@ -2,7 +2,6 @@ import { fields, type UserRecord } from "../../entities/userTable/model";
 import { Form, Typography } from "antd";
 import { useTheme } from "antd-style";
 import { inputs } from "./columns";
-import { Controller, useForm } from "react-hook-form";
 import { cloneElement, forwardRef, useImperativeHandle } from "react";
 
 type inputType = UserRecord;
@@ -53,22 +52,11 @@ export const UserTableForm = forwardRef(
     },
     ref
   ) => {
-    const form = useForm<UserRecord>({
-      defaultValues:
-        initialData ||
-        fields.reduce(
-          (acc, field) => ({
-            ...acc,
-            [field.label]: field.defaultValue,
-          }),
-          {} as UserRecord
-        ),
-    });
-
-    const handleSubmit = form.handleSubmit(onSubmit);
+    const [form] = Form.useForm<UserRecord>();
 
     useImperativeHandle(ref, () => ({
-      submit: form.handleSubmit(onSubmit),
+      submit: (data: UserRecord) => onSubmit(data),
+      reset: () => form.resetFields(),
     }));
 
     return (
@@ -86,38 +74,19 @@ export const UserTableForm = forwardRef(
             {} as UserRecord
           )
         }
-        onFinish={handleSubmit}
+        form={form}
+        onFinish={(data) => onSubmit(data)}
       >
         {inputs.map((input) => {
           return (
-            <Controller
+            <Form.Item<inputType>
+              label={<FormLabel>{input.label}</FormLabel>}
               name={input.label}
               key={input.label}
-              control={form.control}
-              rules={{ required: input.required }}
-              render={({ field: { onChange, onBlur, value } }) => {
-                return (
-                  <Form.Item<inputType>
-                    label={<FormLabel>{input.label}</FormLabel>}
-                    name={input.label}
-                    key={input.label}
-                    required={input.required}
-                  >
-                    {input.type === "checkbox"
-                      ? cloneElement(input.render, {
-                          onChange,
-                          onBlur,
-                          checked: value,
-                        })
-                      : cloneElement(input.render, {
-                          onChange,
-                          onBlur,
-                          value,
-                        })}
-                  </Form.Item>
-                );
-              }}
-            />
+              required={input.required}
+            >
+              {input.render}
+            </Form.Item>
           );
         })}
       </Form>
