@@ -67,9 +67,9 @@ const MainPage = () => {
         okText="저장"
         cancelText="취소"
       >
-        <Flex gap="18px">
+        <div style={{ width: "100%" }}>
           <UserTableForm />
-        </Flex>
+        </div>
       </Modal>
     </div>
   );
