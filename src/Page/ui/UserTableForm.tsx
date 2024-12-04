@@ -2,7 +2,7 @@ import { fields, type UserRecord } from "../../entities/userTable/model";
 import { Form, Typography } from "antd";
 import { useTheme } from "antd-style";
 import { inputs } from "./columns";
-import { cloneElement, forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 
 type inputType = UserRecord;
 
@@ -55,7 +55,7 @@ export const UserTableForm = forwardRef(
     const [form] = Form.useForm<UserRecord>();
 
     useImperativeHandle(ref, () => ({
-      submit: (data: UserRecord) => onSubmit(data),
+      submit: () => form.submit(),
       reset: () => form.resetFields(),
     }));
 
@@ -75,7 +75,10 @@ export const UserTableForm = forwardRef(
           )
         }
         form={form}
-        onFinish={(data) => onSubmit(data)}
+        onFinish={(data) => {
+          console.log(data);
+          onSubmit(data);
+        }}
       >
         {inputs.map((input) => {
           return (
@@ -84,6 +87,7 @@ export const UserTableForm = forwardRef(
               name={input.label}
               key={input.label}
               required={input.required}
+              valuePropName={input.type === "checkbox" ? "checked" : "value"}
             >
               {input.render}
             </Form.Item>
