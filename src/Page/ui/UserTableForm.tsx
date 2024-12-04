@@ -84,8 +84,7 @@ export const UserTableForm = forwardRef(
           onSubmit(data);
         }}
         onValuesChange={(_, values) => {
-          // 필수 필드들의 값이 있는지 체크
-          console.log(values);
+          // 필수 필드들의 값이 있는지 체크 - 이름, 가입일
           const isValid = Boolean(values.이름) && Boolean(values.가입일);
           onFormValuesChange?.(isValid);
         }}

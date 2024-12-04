@@ -14,7 +14,6 @@ class RecordStorage extends BrowserStorageModel<"record"> {
   public setRecords(newRecords: UserRecord[]) {
     this.records = newRecords;
     if (import.meta.env.VITE_STORAGE === "local-storage") {
-      console.log(newRecords);
       this.set("record", JSON.stringify(newRecords));
     }
   }
