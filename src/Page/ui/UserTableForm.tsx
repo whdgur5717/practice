@@ -1,8 +1,11 @@
-import { fields, type UserRecord } from "../../entities/userTable/model";
-import { Form, Input, Typography } from "antd";
+import { type UserRecord } from "../../entities/userTable/model";
+import { Form, Typography } from "antd";
 import { useTheme } from "antd-style";
+import { inputs } from "./columns";
+import { Controller, useForm } from "react-hook-form";
+import { cloneElement } from "react";
 
-type FieldType = UserRecord;
+type inputType = UserRecord;
 
 export const FormLabel = ({ children }: { children: React.ReactNode }) => {
   const token = useTheme();
@@ -40,34 +43,29 @@ const RequiredMark = (
 };
 
 export const UserTableForm = () => {
-  const token = useTheme();
+  const form = useForm<UserRecord>({});
 
   return (
-    <Form
-      layout="vertical"
-      style={{ width: "100%" }}
-      requiredMark={RequiredMark}
-    >
-      {fields.map((field) => {
+    <Form name="userTableForm" layout="vertical" requiredMark={RequiredMark}>
+      {inputs.map((input) => {
         return (
-          <Form.Item<FieldType>
-            label={<FormLabel>{field.label}</FormLabel>}
-            name={field.label}
-            key={field.label}
-            rules={[
-              {
-                required: field.required,
-                message: `${field.label} is required`,
-              },
-            ]}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              color: token.colorTextTertiary,
+          <Controller
+            name={input.label}
+            key={input.label}
+            control={form.control}
+            render={({ field }) => {
+              console.log(field);
+              return (
+                <Form.Item<inputType>
+                  label={<FormLabel>{input.label}</FormLabel>}
+                  name={input.label}
+                  key={input.label}
+                >
+                  {cloneElement(input.render, { ...field })}
+                </Form.Item>
+              );
             }}
-          >
-            <Input />
-          </Form.Item>
+          />
         );
       })}
     </Form>
