@@ -20,38 +20,38 @@ const initialDataSources: DataType[] = initialUserRecords.map(
   })
 );
 
+const modalStyles = (token: ReturnType<typeof useTheme>) => ({
+  header: {
+    display: "flex",
+    borderBottom: `1px solid ${token.colorBorderSecondary}`,
+    alignItems: "flex-start",
+    alignSelf: "stretch",
+    gap: "10px",
+    padding: `${token.paddingSM}px ${token.padding}px`,
+  },
+  body: {
+    display: "flex",
+    padding: `0px ${token.paddingContentHorizontalLG}px`,
+    flexDirection: "column" as const,
+    justifyContent: "center",
+    gap: "20px",
+  },
+  content: {
+    padding: 0,
+  },
+  footer: {
+    padding: `${token.paddingSM}px ${token.padding}px`,
+    gap: "8px",
+    background: `${token.colorFillAlter}`,
+    borderTop: `1px solid ${token.colorSplit}`,
+  },
+});
+
 const MainPage = () => {
   const [tableData, setTableData] = useState(initialDataSources);
   const [storage, _] = useState(recordStorage);
 
   const token = useTheme();
-
-  const modalStyles = {
-    header: {
-      display: "flex",
-      borderBottom: `1px solid ${token.colorBorderSecondary}`,
-      alignItems: "flex-start",
-      alignSelf: "stretch",
-      gap: "10px",
-      padding: `${token.paddingSM}px ${token.padding}px`,
-    },
-    body: {
-      display: "flex",
-      padding: `0px ${token.paddingContentHorizontalLG}px`,
-      flexDirection: "column" as const,
-      justifyContent: "center",
-      gap: "20px",
-    },
-    content: {
-      padding: 0,
-    },
-    footer: {
-      padding: `${token.paddingSM}px ${token.padding}px`,
-      gap: "8px",
-      background: `${token.colorFillAlter}`,
-      borderTop: `1px solid ${token.colorSplit}`,
-    },
-  };
 
   const [open, setOpen] = useState(false);
 
@@ -155,7 +155,7 @@ const MainPage = () => {
         open={open}
         centered
         title="회원 추가"
-        styles={{ ...modalStyles }}
+        styles={{ ...modalStyles(token) }}
         okText="저장"
         okButtonProps={{ disabled: !isFormValid }}
         cancelText="취소"
