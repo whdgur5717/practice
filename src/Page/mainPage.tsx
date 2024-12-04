@@ -59,7 +59,14 @@ const MainPage = () => {
         dataSource={tableData}
         columns={createColumns(tableData)}
       />
-      <Modal open={true} centered title="회원 추가" styles={{ ...modalStyles }}>
+      <Modal
+        open={true}
+        centered
+        title="회원 추가"
+        styles={{ ...modalStyles }}
+        okText="저장"
+        cancelText="취소"
+      >
         <Flex gap="18px">
           <UserTableForm />
         </Flex>
