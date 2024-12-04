@@ -16,13 +16,12 @@ import { recordStorage } from "../entities/userTable/storage";
 const initialDataSources: DataType[] = initialUserRecords.map(
   (record, index) => ({
     ...record,
-    key: index + 1,
+    key: `${record.이름} ${index + 1}`,
   })
 );
 
 const MainPage = () => {
   const [tableData, setTableData] = useState(initialDataSources);
-
   const [storage, _] = useState(recordStorage);
 
   const token = useTheme();
@@ -59,21 +58,29 @@ const MainPage = () => {
     (typeof tableData)[number] | null
   >(null);
 
-  const formRef = useRef<{ submit: () => void }>(null);
+  const formRef = useRef<{ submit: () => void; reset: () => void }>(null);
 
   const onSubmitForm = (data: UserRecord) => {
     const newRecords = editingRecord
-      ? tableData.map((record) =>
-          record.key === editingRecord.key
-            ? { ...data, key: record.key }
-            : record
+      ? tableData.map(
+          (
+            record // 수정 모드
+          ) =>
+            record.key === editingRecord.key
+              ? { ...data, key: editingRecord.key } // 기존 key 유지
+              : record
         )
-      : [...tableData, { ...data, key: tableData.length + 1 }];
+      : [
+          // 추가 모드
+          ...tableData,
+          { ...data, key: `${data.이름} ${tableData.length + 1}` },
+        ];
 
     setTableData(newRecords);
     setOpen(false);
     setEditingRecord(null);
     storage.setRecords(newRecords);
+    formRef.current?.reset();
   };
 
   const onDeleteRecord = (key: string | React.Key) => {
@@ -140,12 +147,17 @@ const MainPage = () => {
         okText="저장"
         cancelText="취소"
         onOk={() => formRef.current?.submit()}
+        onCancel={() => {
+          setOpen(false);
+          formRef.current?.reset();
+          setEditingRecord(null);
+        }}
       >
         <div style={{ width: "100%" }}>
           <UserTableForm
             ref={formRef}
             onSubmit={onSubmitForm}
-            initialData={editingRecord || null}
+            editingData={editingRecord || null}
           />
         </div>
       </Modal>
