@@ -88,6 +88,7 @@ export const UserTableForm = forwardRef(
               key={input.label}
               required={input.required}
               valuePropName={input.type === "checkbox" ? "checked" : "value"}
+              rules={[{ required: input.required }]}
             >
               {input.render}
             </Form.Item>
