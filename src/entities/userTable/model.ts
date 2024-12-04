@@ -16,28 +16,28 @@ type RequiredField = {
  * defaultValue 타입을 통해 입력값의 타입을 정의
  * -------------------------------------------------------------------------- */
 
-const nameField = {
+export const nameField = {
   type: "text" as const,
   label: "이름" as const,
   required: true,
   defaultValue: "",
 };
 
-const addressField = {
+export const addressField = {
   type: "text" as const,
   label: "주소" as const,
   required: false,
   defaultValue: "",
 };
 
-const memoField = {
+export const memoField = {
   type: "textarea" as const,
   label: "메모" as const,
   required: false,
   defaultValue: "",
 };
 
-const dateField = {
+export const dateField = {
   type: "date" as const,
   label: "가입일" as const,
   required: true,
@@ -46,7 +46,7 @@ const dateField = {
 
 const jobOptions = ["개발자", "PO", "디자이너"] as const;
 
-const jobField = {
+export const jobField = {
   type: "select" as const,
   label: "직업" as const,
   required: false,
@@ -54,7 +54,7 @@ const jobField = {
   defaultValue: "개발자" as (typeof jobOptions)[number],
 };
 
-const emailField = {
+export const emailField = {
   type: "checkbox" as const,
   label: "이메일 수신 동의" as const,
   required: false,
