@@ -11,6 +11,7 @@ import { createColumns } from "./ui/columns";
 import { UserTableForm } from "./ui/UserTableForm";
 import { useTheme } from "antd-style";
 
+//record 데이터를 antd table에 맞게 가공(key 추가)
 const initialDataSources: DataType[] = initialUserRecords.map(
   (record, index) => ({
     ...record,
@@ -51,16 +52,35 @@ const MainPage = () => {
   };
 
   const [open, setOpen] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<
+    (typeof tableData)[number] | null
+  >(null);
 
   const formRef = useRef<{ submit: () => void }>(null);
 
   const onSubmitForm = (data: UserRecord) => {
-    setTableData((prev) => [...prev, { ...data, key: prev.length + 1 }]);
+    if (editingRecord) {
+      setTableData((prev) =>
+        prev.map((record) =>
+          record.key === editingRecord.key
+            ? { ...data, key: record.key } // data(UserRecord)에 key를 추가
+            : record
+        )
+      );
+    } else {
+      setTableData((prev) => [...prev, { ...data, key: prev.length + 1 }]);
+    }
     setOpen(false);
+    setEditingRecord(null);
   };
 
   const onDeleteRecord = (key: string | React.Key) => {
     setTableData((prev) => prev.filter((record) => record.key !== key));
+  };
+
+  const onEditRecord = (record: DataType) => {
+    setEditingRecord(record);
+    setOpen(true);
   };
 
   return (
@@ -81,7 +101,7 @@ const MainPage = () => {
           ...createColumns(tableData),
           {
             key: "action",
-            render: (text, record) => (
+            render: (_, record) => (
               <Dropdown
                 menu={{
                   items: [
@@ -90,6 +110,11 @@ const MainPage = () => {
                       label: "삭제",
                       onClick: () => onDeleteRecord(record.key),
                     },
+                    {
+                      key: "edit",
+                      label: "수정",
+                      onClick: () => onEditRecord(record),
+                    },
                   ],
                 }}
               >
@@ -97,7 +122,7 @@ const MainPage = () => {
                   type="text"
                   content="icon-only"
                   icon={<MoreOutlined />}
-                ></Button>
+                />
               </Dropdown>
             ),
           },
@@ -113,7 +138,11 @@ const MainPage = () => {
         onOk={() => formRef.current?.submit()}
       >
         <div style={{ width: "100%" }}>
-          <UserTableForm ref={formRef} onSubmit={onSubmitForm} />
+          <UserTableForm
+            ref={formRef}
+            onSubmit={onSubmitForm}
+            initialData={editingRecord || null}
+          />
         </div>
       </Modal>
     </div>
