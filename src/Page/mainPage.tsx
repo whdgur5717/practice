@@ -48,11 +48,7 @@ const MainPage = () => {
 
   return (
     <div>
-      <Flex
-        justify="space-between"
-        align="center"
-        style={{ padding: "8px 14px" }}
-      >
+      <Flex justify="space-between" align="center">
         <Typography.Title level={5}>회원 목록</Typography.Title>
         <Button type="primary" icon={<PlusOutlined />}>
           추가
