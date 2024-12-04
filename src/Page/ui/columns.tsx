@@ -1,4 +1,4 @@
-import type { TableColumnsType } from "antd";
+import { Checkbox, type TableColumnsType } from "antd";
 import {
   jobField,
   nameField,
@@ -39,7 +39,7 @@ export const createColumns = (
   records: DataType[]
 ): TableColumnsType<DataType> => {
   const filters = createFilters(records);
-  console.log(filters);
+
   return [
     {
       title: nameField.label,
@@ -70,6 +70,7 @@ export const createColumns = (
       title: emailField.label,
       dataIndex: emailField.label,
       filters: filters[emailField.label],
+      render: (_, record) => <Checkbox checked={record["이메일 수신 동의"]} />,
     },
   ];
 };
