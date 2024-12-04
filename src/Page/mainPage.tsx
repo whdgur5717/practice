@@ -100,7 +100,15 @@ const MainPage = () => {
 
   return (
     <div>
-      <Flex justify="space-between" align="center">
+      <Flex
+        justify="space-between"
+        align="center"
+        style={{
+          borderBottom: `1px solid ${token.colorSplit}`,
+          background: `${token.colorBgContainer}`,
+          padding: "8px 14px",
+        }}
+      >
         <Typography.Title level={5}>회원 목록</Typography.Title>
         <Button
           type="primary"
