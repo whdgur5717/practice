@@ -46,19 +46,23 @@ export const UserTableForm = forwardRef(
   (
     {
       onSubmit,
+      initialData,
     }: {
       onSubmit: (data: UserRecord) => void;
+      initialData: UserRecord | null;
     },
     ref
   ) => {
     const form = useForm<UserRecord>({
-      defaultValues: fields.reduce(
-        (acc, field) => ({
-          ...acc,
-          [field.label]: field.defaultValue,
-        }),
-        {} as UserRecord
-      ),
+      defaultValues:
+        initialData ||
+        fields.reduce(
+          (acc, field) => ({
+            ...acc,
+            [field.label]: field.defaultValue,
+          }),
+          {} as UserRecord
+        ),
     });
 
     const handleSubmit = form.handleSubmit(onSubmit);
@@ -72,13 +76,16 @@ export const UserTableForm = forwardRef(
         name="userTableForm"
         layout="vertical"
         requiredMark={RequiredMark}
-        initialValues={fields.reduce(
-          (acc, field) => ({
-            ...acc,
-            [field.label]: field.defaultValue,
-          }),
-          {} as UserRecord
-        )}
+        initialValues={
+          initialData ||
+          fields.reduce(
+            (acc, field) => ({
+              ...acc,
+              [field.label]: field.defaultValue,
+            }),
+            {} as UserRecord
+          )
+        }
         onFinish={handleSubmit}
       >
         {inputs.map((input) => {
@@ -88,7 +95,7 @@ export const UserTableForm = forwardRef(
               key={input.label}
               control={form.control}
               rules={{ required: input.required }}
-              render={({ field }) => {
+              render={({ field: { onChange, onBlur, value } }) => {
                 return (
                   <Form.Item<inputType>
                     label={<FormLabel>{input.label}</FormLabel>}
@@ -96,9 +103,17 @@ export const UserTableForm = forwardRef(
                     key={input.label}
                     required={input.required}
                   >
-                    {cloneElement(input.render, {
-                      ...field,
-                    })}
+                    {input.type === "checkbox"
+                      ? cloneElement(input.render, {
+                          onChange,
+                          onBlur,
+                          checked: value,
+                        })
+                      : cloneElement(input.render, {
+                          onChange,
+                          onBlur,
+                          value,
+                        })}
                   </Form.Item>
                 );
               }}
