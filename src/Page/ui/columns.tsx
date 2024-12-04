@@ -110,5 +110,5 @@ export const inputs = [
       />
     ),
   },
-  { ...emailField, render: <Checkbox checked={emailField.defaultValue} /> },
+  { ...emailField, render: <Checkbox /> },
 ] as const;
