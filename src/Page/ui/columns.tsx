@@ -1,4 +1,4 @@
-import { Checkbox, type TableColumnsType } from "antd";
+import { Checkbox, Input, Select, type TableColumnsType } from "antd";
 import {
   jobField,
   nameField,
@@ -80,3 +80,36 @@ export const createColumns = (
     },
   ];
 };
+
+export const inputs = [
+  {
+    ...nameField,
+    render: <Input placeholder="Input" />,
+  },
+  { ...addressField, render: <Input placeholder="Input" /> },
+  { ...memoField, render: <Input.TextArea size="large" rows={4} /> },
+  {
+    ...dateField,
+    render: (
+      <Input
+        type={dateField.type}
+        style={{ display: "inline-block", width: "auto" }}
+      />
+    ),
+  },
+  {
+    ...jobField,
+    placeholder: "Input",
+    render: (
+      <Select
+        defaultValue={jobField.defaultValue}
+        options={jobField.options.map((option) => ({
+          value: option,
+          label: option,
+        }))}
+        style={{ display: "inline-block", width: "auto" }}
+      />
+    ),
+  },
+  { ...emailField, render: <Checkbox checked={emailField.defaultValue} /> },
+] as const;
