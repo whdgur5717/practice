@@ -10,6 +10,7 @@ import { useRef, useState } from "react";
 import { createColumns } from "./ui/columns";
 import { UserTableForm } from "./ui/UserTableForm";
 import { useTheme } from "antd-style";
+import { recordStorage } from "../entities/userTable/storage";
 
 //record 데이터를 antd table에 맞게 가공(key 추가)
 const initialDataSources: DataType[] = initialUserRecords.map(
@@ -21,6 +22,8 @@ const initialDataSources: DataType[] = initialUserRecords.map(
 
 const MainPage = () => {
   const [tableData, setTableData] = useState(initialDataSources);
+
+  const [storage, _] = useState(recordStorage);
 
   const token = useTheme();
 
@@ -59,23 +62,24 @@ const MainPage = () => {
   const formRef = useRef<{ submit: () => void }>(null);
 
   const onSubmitForm = (data: UserRecord) => {
-    if (editingRecord) {
-      setTableData((prev) =>
-        prev.map((record) =>
+    const newRecords = editingRecord
+      ? tableData.map((record) =>
           record.key === editingRecord.key
-            ? { ...data, key: record.key } // data(UserRecord)에 key를 추가
+            ? { ...data, key: record.key }
             : record
         )
-      );
-    } else {
-      setTableData((prev) => [...prev, { ...data, key: prev.length + 1 }]);
-    }
+      : [...tableData, { ...data, key: tableData.length + 1 }];
+
+    setTableData(newRecords);
     setOpen(false);
     setEditingRecord(null);
+    storage.setRecords(newRecords);
   };
 
   const onDeleteRecord = (key: string | React.Key) => {
-    setTableData((prev) => prev.filter((record) => record.key !== key));
+    const newRecords = tableData.filter((record) => record.key !== key);
+    setTableData(newRecords);
+    storage.setRecords(newRecords);
   };
 
   const onEditRecord = (record: DataType) => {
