@@ -1,6 +1,6 @@
-import { Button, Flex, Modal, Typography } from "antd";
+import { Button, Dropdown, Flex, Modal, Typography } from "antd";
 import { UserTable } from "./ui/UserTable";
-import { PlusOutlined } from "@ant-design/icons";
+import { MoreOutlined, PlusOutlined } from "@ant-design/icons";
 import type { DataType } from "./ui/type";
 import {
   initialUserRecords,
@@ -59,6 +59,10 @@ const MainPage = () => {
     setOpen(false);
   };
 
+  const onDeleteRecord = (key: string | React.Key) => {
+    setTableData((prev) => prev.filter((record) => record.key !== key));
+  };
+
   return (
     <div>
       <Flex justify="space-between" align="center">
@@ -73,7 +77,31 @@ const MainPage = () => {
       </Flex>
       <UserTable<DataType>
         dataSource={tableData}
-        columns={createColumns(tableData)}
+        columns={[
+          ...createColumns(tableData),
+          {
+            key: "action",
+            render: (text, record) => (
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      key: "delete",
+                      label: "삭제",
+                      onClick: () => onDeleteRecord(record.key),
+                    },
+                  ],
+                }}
+              >
+                <Button
+                  type="text"
+                  content="icon-only"
+                  icon={<MoreOutlined />}
+                ></Button>
+              </Dropdown>
+            ),
+          },
+        ]}
       />
       <Modal
         open={open}
