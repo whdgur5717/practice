@@ -1,12 +1,12 @@
 import { Button, Flex, Modal, Typography } from "antd";
 import { UserTable } from "./ui/UserTable";
-import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import type { DataType } from "./ui/type";
 import { initialUserRecords } from "../entities/userTable/model";
 import { useState } from "react";
 import { createColumns } from "./ui/columns";
 import { UserTableForm } from "./ui/UserTableForm";
-import { createStyles, useTheme } from "antd-style";
+import { useTheme } from "antd-style";
 
 const initialDataSources: DataType[] = initialUserRecords.map(
   (record, index) => ({
@@ -27,7 +27,7 @@ const MainPage = () => {
       alignItems: "flex-start",
       alignSelf: "stretch",
       gap: "10px",
-      padding: `${token.paddingSM}px 16px`,
+      padding: `${token.paddingSM}px ${token.padding}px`,
     },
     body: {
       display: "flex",
@@ -38,6 +38,11 @@ const MainPage = () => {
     },
     content: {
       padding: 0,
+    },
+    footer: {
+      padding: `${token.paddingSM}px ${token.padding}px`,
+      gap: "8px",
+      background: `${token.colorFillAlter}`,
     },
   };
 
@@ -57,13 +62,7 @@ const MainPage = () => {
         dataSource={tableData}
         columns={createColumns(tableData)}
       />
-      <Modal
-        open={true}
-        centered
-        title="회원 추가"
-        width="100%"
-        styles={{ ...modalStyles }}
-      >
+      <Modal open={true} centered title="회원 추가" styles={{ ...modalStyles }}>
         <Flex gap="18px">
           <UserTableForm />
         </Flex>
