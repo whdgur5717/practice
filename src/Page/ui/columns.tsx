@@ -1,4 +1,4 @@
-import { Checkbox, type TableColumnsType } from "antd";
+import { Checkbox, Input, Select, type TableColumnsType } from "antd";
 import {
   jobField,
   nameField,
@@ -7,6 +7,7 @@ import {
   emailField,
   dateField,
   type UserRecord,
+  fields,
 } from "../../entities/userTable/model";
 import type { DataType } from "./type";
 
@@ -38,6 +39,13 @@ export const createFilters = (records: DataType[]) => {
 export const createColumns = (
   records: DataType[]
 ): TableColumnsType<DataType> => {
+  if (records.length === 0) {
+    return fields.map((field) => ({
+      title: field.label,
+      dataIndex: field.label,
+    }));
+  }
+
   const filters = createFilters(records);
 
   return [
@@ -80,3 +88,35 @@ export const createColumns = (
     },
   ];
 };
+
+export const inputs = [
+  {
+    ...nameField,
+    render: <Input placeholder="Input" />,
+  },
+  { ...addressField, render: <Input placeholder="Input" /> },
+  { ...memoField, render: <Input.TextArea size="large" rows={4} /> },
+  {
+    ...dateField,
+    render: (
+      <Input
+        type={dateField.type}
+        style={{ display: "inline-block", width: "auto" }}
+      />
+    ),
+  },
+  {
+    ...jobField,
+    placeholder: "Input",
+    render: (
+      <Select
+        options={jobField.options.map((option) => ({
+          value: option,
+          label: option,
+        }))}
+        style={{ display: "inline-block", width: "auto" }}
+      />
+    ),
+  },
+  { ...emailField, render: <Checkbox /> },
+] as const;

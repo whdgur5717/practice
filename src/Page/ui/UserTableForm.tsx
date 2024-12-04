@@ -1,8 +1,10 @@
 import { fields, type UserRecord } from "../../entities/userTable/model";
-import { Form, Input, Typography } from "antd";
+import { Form, Typography } from "antd";
 import { useTheme } from "antd-style";
+import { inputs } from "./columns";
+import { forwardRef, useEffect, useImperativeHandle } from "react";
 
-type FieldType = UserRecord;
+type inputType = UserRecord;
 
 export const FormLabel = ({ children }: { children: React.ReactNode }) => {
   const token = useTheme();
@@ -39,37 +41,69 @@ const RequiredMark = (
   );
 };
 
-export const UserTableForm = () => {
-  const token = useTheme();
+export const UserTableForm = forwardRef(
+  (
+    {
+      onSubmit,
+      editingData,
+      onFormValuesChange,
+    }: {
+      onSubmit: (data: UserRecord) => void;
+      editingData: UserRecord | null;
+      onFormValuesChange?: (isValid: boolean) => void;
+    },
+    ref
+  ) => {
+    const [form] = Form.useForm<UserRecord>();
 
-  return (
-    <Form
-      layout="vertical"
-      style={{ width: "100%" }}
-      requiredMark={RequiredMark}
-    >
-      {fields.map((field) => {
-        return (
-          <Form.Item<FieldType>
-            label={<FormLabel>{field.label}</FormLabel>}
-            name={field.label}
-            key={field.label}
-            rules={[
-              {
-                required: field.required,
-                message: `${field.label} is required`,
-              },
-            ]}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              color: token.colorTextTertiary,
-            }}
-          >
-            <Input />
-          </Form.Item>
-        );
-      })}
-    </Form>
-  );
-};
+    useImperativeHandle(ref, () => ({
+      submit: () => form.submit(),
+      reset: () => form.resetFields(),
+    }));
+
+    useEffect(() => {
+      form.setFieldsValue(
+        editingData ||
+          fields.reduce(
+            (acc, field) => ({
+              ...acc,
+              [field.label]: field.defaultValue,
+            }),
+            {} as UserRecord
+          )
+      );
+    }, [editingData]);
+
+    return (
+      <Form
+        name="userTableForm"
+        layout="vertical"
+        requiredMark={RequiredMark}
+        form={form}
+        onFinish={(data) => {
+          onSubmit(data);
+        }}
+        onValuesChange={(_, values) => {
+          // 필수 필드들의 값이 있는지 체크 - 이름, 가입일
+          const isValid = Boolean(values.이름) && Boolean(values.가입일);
+          onFormValuesChange?.(isValid);
+        }}
+      >
+        {inputs.map((input) => {
+          return (
+            <Form.Item<inputType>
+              label={<FormLabel>{input.label}</FormLabel>}
+              name={input.label}
+              key={input.label}
+              required={input.required}
+              valuePropName={input.type === "checkbox" ? "checked" : "value"}
+              rules={[{ required: input.required }]}
+            >
+              {input.render}
+            </Form.Item>
+          );
+        })}
+      </Form>
+    );
+  }
+);

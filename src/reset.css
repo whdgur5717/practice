@@ -13,10 +13,6 @@ html {
 
 body {
   min-height: 100vh;
-  text-rendering: optimizeSpeed;
-  line-height: 1.5;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 ul,
@@ -53,30 +49,4 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
-}
-
-/* 접근성을 위한 스킵 네비게이션 */
-.skip-nav {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.skip-nav:focus {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: auto;
-  height: auto;
-  padding: 1rem;
-  margin: 0;
-  clip: auto;
-  background: #fff;
-  z-index: 9999;
 }
