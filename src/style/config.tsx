@@ -13,5 +13,8 @@ export const config: ThemeConfig = {
     Button: {
       colorBgTextHover: "rgba(0,0,0,0.06)",
     },
+    Modal: {
+      padding: 16,
+    },
   },
 };

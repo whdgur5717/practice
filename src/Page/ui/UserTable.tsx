@@ -1,8 +1,9 @@
-import { Table } from "antd";
+import { Button, Flex, Table, Typography, type TableProps } from "antd";
 import { initialUserRecords } from "../../entities/userTable/model";
 import { useState } from "react";
 import { createColumns } from "./columns";
 import type { DataType } from "./type";
+import { PlusOutlined } from "@ant-design/icons";
 
 const initialDataSources: DataType[] = initialUserRecords.map(
   (record, index) => ({
@@ -11,13 +12,15 @@ const initialDataSources: DataType[] = initialUserRecords.map(
   })
 );
 
-export const UserTable = () => {
+interface UserTableProps<T> {
+  dataSource: TableProps<T>["dataSource"];
+  columns: TableProps<T>["columns"];
+}
+
+export const UserTable = <T,>({ dataSource, columns }: UserTableProps<T>) => {
   const [tableData, setTableData] = useState(initialDataSources);
 
   return (
-    <Table<DataType>
-      dataSource={tableData}
-      columns={createColumns(tableData)}
-    />
+    <Table<T> dataSource={dataSource} columns={columns} pagination={false} />
   );
 };
