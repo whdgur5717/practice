@@ -7,6 +7,7 @@ import {
   emailField,
   dateField,
   type UserRecord,
+  fields,
 } from "../../entities/userTable/model";
 import type { DataType } from "./type";
 
@@ -38,6 +39,13 @@ export const createFilters = (records: DataType[]) => {
 export const createColumns = (
   records: DataType[]
 ): TableColumnsType<DataType> => {
+  if (records.length === 0) {
+    return fields.map((field) => ({
+      title: field.label,
+      dataIndex: field.label,
+    }));
+  }
+
   const filters = createFilters(records);
 
   return [
