@@ -3,7 +3,7 @@ import { Form, Typography } from "antd";
 import { useTheme } from "antd-style";
 import { inputs } from "./columns";
 import { Controller, useForm } from "react-hook-form";
-import { cloneElement } from "react";
+import { cloneElement, forwardRef, useImperativeHandle } from "react";
 
 type inputType = UserRecord;
 
@@ -42,53 +42,70 @@ const RequiredMark = (
   );
 };
 
-export const UserTableForm = () => {
-  const form = useForm<UserRecord>({
-    defaultValues: fields.reduce(
-      (acc, field) => ({
-        ...acc,
-        [field.label]: field.defaultValue,
-      }),
-      {} as UserRecord
-    ),
-  });
-
-  return (
-    <Form
-      name="userTableForm"
-      layout="vertical"
-      requiredMark={RequiredMark}
-      initialValues={fields.reduce(
+export const UserTableForm = forwardRef(
+  (
+    {
+      onSubmit,
+    }: {
+      onSubmit: (data: UserRecord) => void;
+    },
+    ref
+  ) => {
+    const form = useForm<UserRecord>({
+      defaultValues: fields.reduce(
         (acc, field) => ({
           ...acc,
           [field.label]: field.defaultValue,
         }),
         {} as UserRecord
-      )}
-      onFinish={form.handleSubmit((values) => {
-        console.log(values);
-      })}
-    >
-      {inputs.map((input) => {
-        return (
-          <Controller
-            name={input.label}
-            key={input.label}
-            control={form.control}
-            render={({ field }) => {
-              return (
-                <Form.Item<inputType>
-                  label={<FormLabel>{input.label}</FormLabel>}
-                  name={input.label}
-                  key={input.label}
-                >
-                  {cloneElement(input.render, { ...field })}
-                </Form.Item>
-              );
-            }}
-          />
-        );
-      })}
-    </Form>
-  );
-};
+      ),
+    });
+
+    const handleSubmit = form.handleSubmit(onSubmit);
+
+    useImperativeHandle(ref, () => ({
+      submit: form.handleSubmit(onSubmit),
+    }));
+
+    return (
+      <Form
+        name="userTableForm"
+        layout="vertical"
+        requiredMark={RequiredMark}
+        initialValues={fields.reduce(
+          (acc, field) => ({
+            ...acc,
+            [field.label]: field.defaultValue,
+          }),
+          {} as UserRecord
+        )}
+        onFinish={handleSubmit}
+      >
+        {inputs.map((input) => {
+          return (
+            <Controller
+              name={input.label}
+              key={input.label}
+              control={form.control}
+              rules={{ required: input.required }}
+              render={({ field }) => {
+                return (
+                  <Form.Item<inputType>
+                    label={<FormLabel>{input.label}</FormLabel>}
+                    name={input.label}
+                    key={input.label}
+                    required={input.required}
+                  >
+                    {cloneElement(input.render, {
+                      ...field,
+                    })}
+                  </Form.Item>
+                );
+              }}
+            />
+          );
+        })}
+      </Form>
+    );
+  }
+);

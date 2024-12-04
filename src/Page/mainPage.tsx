@@ -2,8 +2,11 @@ import { Button, Flex, Modal, Typography } from "antd";
 import { UserTable } from "./ui/UserTable";
 import { PlusOutlined } from "@ant-design/icons";
 import type { DataType } from "./ui/type";
-import { initialUserRecords } from "../entities/userTable/model";
-import { useState } from "react";
+import {
+  initialUserRecords,
+  type UserRecord,
+} from "../entities/userTable/model";
+import { useRef, useState } from "react";
 import { createColumns } from "./ui/columns";
 import { UserTableForm } from "./ui/UserTableForm";
 import { useTheme } from "antd-style";
@@ -47,11 +50,24 @@ const MainPage = () => {
     },
   };
 
+  const [open, setOpen] = useState(false);
+
+  const formRef = useRef<{ submit: () => void }>(null);
+
+  const onSubmitForm = (data: UserRecord) => {
+    setTableData((prev) => [...prev, { ...data, key: prev.length + 1 }]);
+    setOpen(false);
+  };
+
   return (
     <div>
       <Flex justify="space-between" align="center">
         <Typography.Title level={5}>회원 목록</Typography.Title>
-        <Button type="primary" icon={<PlusOutlined />}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setOpen(true)}
+        >
           추가
         </Button>
       </Flex>
@@ -60,15 +76,16 @@ const MainPage = () => {
         columns={createColumns(tableData)}
       />
       <Modal
-        open={true}
+        open={open}
         centered
         title="회원 추가"
         styles={{ ...modalStyles }}
         okText="저장"
         cancelText="취소"
+        onOk={() => formRef.current?.submit()}
       >
         <div style={{ width: "100%" }}>
-          <UserTableForm />
+          <UserTableForm ref={formRef} onSubmit={onSubmitForm} />
         </div>
       </Modal>
     </div>
