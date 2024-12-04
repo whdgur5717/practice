@@ -1,50 +1,9 @@
-# React + TypeScript + Vite
+## 화면 캡쳐 <img width="1920" alt="스크린샷 2024-12-05 오전 5 47 33" src="https://github.com/user-attachments/assets/c05a7b55-5c16-4b1e-bc6d-ea3bd2854bd5">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## 중점을 둔 부분
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+1. 필드와 레코드, 폼이 각각의 데이터가 아닌 연결되어 있는 부분이 있다고 판단하여 세 데이터에 공통적으로 사용할 수 있는 타입과 로직을 만드려 노력했습니다
+2. 최대한 antd의 기본 디자인과 기능(Table,Form)을 사용했습니다
+3. 컴포넌트 추상화를 진행하면서, 단일 책임 원칙을 고려했습니다
+4. 반복되는 코드나 긴 코드를 무조건 정리하기 보다는, 유지보수성을 고려하여 정리했습니다
