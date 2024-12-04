@@ -1,12 +1,8 @@
 import { Table } from "antd";
-import {
-  initialUserRecords,
-  type UserRecord,
-} from "../../entities/userTable/model";
+import { initialUserRecords } from "../../entities/userTable/model";
 import { useState } from "react";
-interface DataType extends UserRecord {
-  key: React.Key;
-}
+import { createColumns } from "./columns";
+import type { DataType } from "./type";
 
 const initialDataSources: DataType[] = initialUserRecords.map(
   (record, index) => ({
@@ -18,5 +14,10 @@ const initialDataSources: DataType[] = initialUserRecords.map(
 export const UserTable = () => {
   const [tableData, setTableData] = useState(initialDataSources);
 
-  return <Table<DataType> />;
+  return (
+    <Table<DataType>
+      dataSource={tableData}
+      columns={createColumns(tableData)}
+    />
+  );
 };
