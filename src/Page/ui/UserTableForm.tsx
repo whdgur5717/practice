@@ -2,7 +2,7 @@ import { fields, type UserRecord } from "../../entities/userTable/model";
 import { Form, Typography } from "antd";
 import { useTheme } from "antd-style";
 import { inputs } from "./columns";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useEffect, useImperativeHandle } from "react";
 
 type inputType = UserRecord;
 
@@ -45,10 +45,10 @@ export const UserTableForm = forwardRef(
   (
     {
       onSubmit,
-      initialData,
+      editingData,
     }: {
       onSubmit: (data: UserRecord) => void;
-      initialData: UserRecord | null;
+      editingData: UserRecord | null;
     },
     ref
   ) => {
@@ -59,13 +59,9 @@ export const UserTableForm = forwardRef(
       reset: () => form.resetFields(),
     }));
 
-    return (
-      <Form
-        name="userTableForm"
-        layout="vertical"
-        requiredMark={RequiredMark}
-        initialValues={
-          initialData ||
+    useEffect(() => {
+      form.setFieldsValue(
+        editingData ||
           fields.reduce(
             (acc, field) => ({
               ...acc,
@@ -73,10 +69,16 @@ export const UserTableForm = forwardRef(
             }),
             {} as UserRecord
           )
-        }
+      );
+    }, [editingData]);
+
+    return (
+      <Form
+        name="userTableForm"
+        layout="vertical"
+        requiredMark={RequiredMark}
         form={form}
         onFinish={(data) => {
-          console.log(data);
           onSubmit(data);
         }}
       >
