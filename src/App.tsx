@@ -1,5 +1,7 @@
+import TableView from "./Page/mainPage";
+
 function App() {
-  return <div></div>
+  return <TableView />;
 }
 
-export default App
+export default App;
