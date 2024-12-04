@@ -43,6 +43,7 @@ const MainPage = () => {
       padding: `${token.paddingSM}px ${token.padding}px`,
       gap: "8px",
       background: `${token.colorFillAlter}`,
+      borderTop: `1px solid ${token.colorSplit}`,
     },
   };
 
