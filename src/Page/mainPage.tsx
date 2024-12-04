@@ -54,11 +54,13 @@ const MainPage = () => {
   };
 
   const [open, setOpen] = useState(false);
+
+  //폼 관련 로직
+  const formRef = useRef<{ submit: () => void; reset: () => void }>(null);
+
   const [editingRecord, setEditingRecord] = useState<
     (typeof tableData)[number] | null
-  >(null);
-
-  const formRef = useRef<{ submit: () => void; reset: () => void }>(null);
+  >(null); //수정 시 레코드 저장
 
   const onSubmitForm = (data: UserRecord) => {
     const newRecords = editingRecord
@@ -93,6 +95,8 @@ const MainPage = () => {
     setEditingRecord(record);
     setOpen(true);
   };
+
+  const [isFormValid, setIsFormValid] = useState(false);
 
   return (
     <div>
@@ -145,6 +149,7 @@ const MainPage = () => {
         title="회원 추가"
         styles={{ ...modalStyles }}
         okText="저장"
+        okButtonProps={{ disabled: !isFormValid }}
         cancelText="취소"
         onOk={() => formRef.current?.submit()}
         onCancel={() => {
@@ -158,6 +163,7 @@ const MainPage = () => {
             ref={formRef}
             onSubmit={onSubmitForm}
             editingData={editingRecord || null}
+            onFormValuesChange={setIsFormValid}
           />
         </div>
       </Modal>

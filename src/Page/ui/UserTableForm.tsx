@@ -46,9 +46,11 @@ export const UserTableForm = forwardRef(
     {
       onSubmit,
       editingData,
+      onFormValuesChange,
     }: {
       onSubmit: (data: UserRecord) => void;
       editingData: UserRecord | null;
+      onFormValuesChange?: (isValid: boolean) => void;
     },
     ref
   ) => {
@@ -80,6 +82,12 @@ export const UserTableForm = forwardRef(
         form={form}
         onFinish={(data) => {
           onSubmit(data);
+        }}
+        onValuesChange={(_, values) => {
+          // 필수 필드들의 값이 있는지 체크
+          console.log(values);
+          const isValid = Boolean(values.이름) && Boolean(values.가입일);
+          onFormValuesChange?.(isValid);
         }}
       >
         {inputs.map((input) => {
