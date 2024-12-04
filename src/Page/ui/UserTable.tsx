@@ -1,9 +1,7 @@
-import { Button, Flex, Table, Typography, type TableProps } from "antd";
+import { Table, type TableProps } from "antd";
 import { initialUserRecords } from "../../entities/userTable/model";
 import { useState } from "react";
-import { createColumns } from "./columns";
 import type { DataType } from "./type";
-import { PlusOutlined } from "@ant-design/icons";
 
 const initialDataSources: DataType[] = initialUserRecords.map(
   (record, index) => ({
@@ -21,6 +19,13 @@ export const UserTable = <T,>({ dataSource, columns }: UserTableProps<T>) => {
   const [tableData, setTableData] = useState(initialDataSources);
 
   return (
-    <Table<T> dataSource={dataSource} columns={columns} pagination={false} />
+    <Table<T>
+      dataSource={dataSource}
+      columns={columns}
+      pagination={false}
+      rowSelection={{
+        type: "checkbox",
+      }}
+    />
   );
 };
