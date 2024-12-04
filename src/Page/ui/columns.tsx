@@ -45,32 +45,38 @@ export const createColumns = (
       title: nameField.label,
       dataIndex: nameField.label,
       filters: filters[nameField.label],
+      onFilter: (value, record) => record[nameField.label] === value,
     },
     {
       title: addressField.label,
       dataIndex: addressField.label,
       filters: filters[addressField.label],
+      onFilter: (value, record) => record[addressField.label] === value,
     },
     {
       title: memoField.label,
       dataIndex: memoField.label,
       filters: filters[memoField.label],
+      onFilter: (value, record) => record[memoField.label] === value,
     },
     {
       title: dateField.label,
       dataIndex: dateField.label,
       filters: filters[dateField.label],
+      onFilter: (value, record) => record[dateField.label] === value,
     },
     {
       title: jobField.label,
       dataIndex: jobField.label,
       filters: filters[jobField.label],
+      onFilter: (value, record) => record[jobField.label] === value,
     },
     {
       title: emailField.label,
       dataIndex: emailField.label,
       filters: filters[emailField.label],
       render: (_, record) => <Checkbox checked={record["이메일 수신 동의"]} />,
+      onFilter: (value, record) => record[emailField.label] === value,
     },
   ];
 };
