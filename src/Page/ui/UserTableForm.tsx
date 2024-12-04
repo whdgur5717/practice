@@ -1,4 +1,4 @@
-import { type UserRecord } from "../../entities/userTable/model";
+import { fields, type UserRecord } from "../../entities/userTable/model";
 import { Form, Typography } from "antd";
 import { useTheme } from "antd-style";
 import { inputs } from "./columns";
@@ -43,10 +43,32 @@ const RequiredMark = (
 };
 
 export const UserTableForm = () => {
-  const form = useForm<UserRecord>({});
+  const form = useForm<UserRecord>({
+    defaultValues: fields.reduce(
+      (acc, field) => ({
+        ...acc,
+        [field.label]: field.defaultValue,
+      }),
+      {} as UserRecord
+    ),
+  });
 
   return (
-    <Form name="userTableForm" layout="vertical" requiredMark={RequiredMark}>
+    <Form
+      name="userTableForm"
+      layout="vertical"
+      requiredMark={RequiredMark}
+      initialValues={fields.reduce(
+        (acc, field) => ({
+          ...acc,
+          [field.label]: field.defaultValue,
+        }),
+        {} as UserRecord
+      )}
+      onFinish={form.handleSubmit((values) => {
+        console.log(values);
+      })}
+    >
       {inputs.map((input) => {
         return (
           <Controller
@@ -54,7 +76,6 @@ export const UserTableForm = () => {
             key={input.label}
             control={form.control}
             render={({ field }) => {
-              console.log(field);
               return (
                 <Form.Item<inputType>
                   label={<FormLabel>{input.label}</FormLabel>}

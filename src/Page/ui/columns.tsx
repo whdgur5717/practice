@@ -102,7 +102,6 @@ export const inputs = [
     placeholder: "Input",
     render: (
       <Select
-        defaultValue={jobField.defaultValue}
         options={jobField.options.map((option) => ({
           value: option,
           label: option,
